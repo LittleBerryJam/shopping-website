@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Store name here</title>
+        <meta charset="utf-8">
+        <style>
+            .shopItem{
+                border: 1px solid black;
+                display: inline-block;
+                padding: 1rem;
+            }
+        </style>
+        <script>
+            cart = [];
+            function addToCart(){
+                let itemHTML = event.srcElement.parentElement;
+                let item = {};
+                for(tag of itemHTML.children){
+                    if(tag.tagName == "H1"){
+                        item.prod_name = tag.innerHTML;
+                    }
+                    if(tag.innerHTML.charAt(0) == "₱"){
+                        item.prod_price = tag.innerHTML;
+                    }
+                    
+                }
+                cart.push(item);
+            }
+        </script>
+    </head>
+    <body>
+        <div id="shopList">
+            <div class="shopItem">
+                <h1>Test item 1</h1>
+                <p>Description 1</p>
+                <p>₱ 100.00</p>
+                <button onclick="addToCart()">Add to cart</button>
+            </div>
+            <div class="shopItem">
+                <h1>Test item 2</h1>
+                <p>Description 2</p>
+                <p>₱ 50.00</p>
+                <button onclick="addToCart()">Add to cart</button>
+            </div>
+        </div>
+        
+    </body>
+</html>
