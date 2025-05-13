@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Online Shop - Electronics</title>
   <style>
     body {
@@ -62,7 +62,7 @@
       margin-bottom: 10px;
     }
 
-    #shopList {
+    .shopList {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
@@ -259,7 +259,8 @@
 
     <div class="category">
       <h2>Hironos</h2>
-      <div id="shopList">
+
+      <div class="shopList">
         <div class="shopItem">
 		<img src="https://prod-eurasian-res.popmart.com/default/20250114_173739_232427____1_____1200x1200.jpg" alt="Hirono The Little Prince Figurine">
           <h3>Hirono The Little Prince Figurine</h3>
@@ -293,7 +294,7 @@
       </div>
 
       <h2>Video Games</h2>
-      <div id="shopList">
+      <div class="shopList">
         <div class="shopItem">
 		<img src="https://ecommerce.datablitz.com.ph/cdn/shop/files/sdvdsvsd_700x.jpg?v=1713169382" alt="Animal Crossing: New Horizons (MDE)">
           <h3>Animal Crossing: New Horizons (MDE)</h3>
@@ -327,7 +328,7 @@
       </div>
 
       <h2>Squishmallows</h2>
-      <div id="shopList">
+      <div class="shopList">
         <div class="shopItem">
 		<img src="https://www.toykingdom.com.ph/cdn/shop/files/TK39125383SQSN00484B_RMB_2_400x.png?v=1732087894https://www.toykingdom.com.ph/cdn/shop/files/TK39125383SQSN00484B_RMB_2_400x.png?v=1732087894" alt="Squishmallows Hello Kitty And Friends Pompompurin">
           <h3>Squishmallows Hello Kitty And Friends Pompompurin</h3>
@@ -361,7 +362,7 @@
       </div>
 
       <h2>SKULLPANDA</h2>
-      <div id="shopList">
+      <div class="shopList">
         <div class="shopItem">
 		<img src="https://prod-eurasian-res.popmart.com/default/20250114_173739_232427____1_____1200x1200.jpg" alt="SKULLPANDA The Sound Series Figures">
           <h3>SKULLPANDA The Sound Series Figures</h3>
@@ -404,16 +405,16 @@
 
       <form id="checkoutForm" action="http://47.129.9.35/cs3/checkout.php" method="POST">
         <label for="name">Full Name:</label>
-        <input type="text" name="cust_name" id="name" required/>
+        <input type="text" name="cust_name" id="name" required>
 
         <label for="address">Delivery Address:</label>
-        <input type="text" name="cust_addr" id="address" required/>
+        <input type="text" name="cust_addr" id="address" required>
 
         <label for="email">Email:</label>
-        <input type="text" name="cust_email" id="email" required/>
+        <input type="text" name="cust_email" id="email" required>
 
-        <input type="hidden" name="cust_order" id="cust_order"/>
-        <input type="submit" value="Proceed to Checkout" />
+        <input type="hidden" name="cust_order" id="cust_order">
+        <input type="submit" value="Proceed to Checkout">
       </form>
     </div>
   </div>
