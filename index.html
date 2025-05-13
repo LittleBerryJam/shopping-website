@@ -1,98 +1,505 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Store name here</title>
-        <meta charset="utf-8">
-        <style>
-            .shopItem{
-                border: 1px solid black;
-                display: inline-block;
-                padding: 1rem;
-            }
-            #cart{
-                border: 1px solid black;
-                display: inline-block;
-                padding: 1rem;
-            }
-            .cartItem{
-                border: 1px solid black;
-                display: inline-block;
-                padding: 1rem;
-            }
-            .removeButton{
-                cursor: pointer;
-            }
-        </style>
-        <script>
-            cart = [];
-            function addCartItem(item){
-                let cartItems = document.getElementById("cartItems");
-                let itemDiv = document.createElement("div");
-                let itemName = document.createElement("p");
-                let remove = document.createElement("p");
-                itemName.innerHTML = item.prod_name;
-                remove.innerHTML = "Remove";
-                itemDiv.className = "cartItem";
-                itemDiv.appendChild(itemName);
-                itemDiv.appendChild(remove);
-                remove.setAttribute("onclick", "remove()");
-                remove.setAttribute("class", "removeButton");
-                itemDiv.setAttribute("index", cart.length);
-                cartItems.appendChild(itemDiv);
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Online Shop - Electronics</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom, white, lightgray);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
 
-            }
-            function addToCart(){
-                let itemHTML = event.srcElement.parentElement;
-                let item = {};
-                for(tag of itemHTML.children){
-                    if(tag.tagName == "H1"){
-                        item.prod_name = tag.innerHTML;
-                    }
-                    if(tag.innerHTML.charAt(0) == "₱"){
-                        item.prod_price = tag.innerHTML;
-                    }
-                    
-                }
-                addCartItem(item);
-                cart.push(item);
-            }
-            function remove(){
-                let itemDiv = event.srcElement.parentElement;
-                let indexRemove = itemDiv.getAttribute("index")
-                cart.splice(indexRemove,1);
-                itemDiv.remove();
-            }
-        </script>
-    </head>
-    <body>
-        <div id="shopList">
-            <div class="shopItem">
-                <h1>Test item 1</h1>
-                <p>Description 1</p>
-                <p>₱ 100.00</p>
-                <button onclick="addToCart()">Add to cart</button>
-            </div>
-            <div class="shopItem">
-                <h1>Test item 2</h1>
-                <p>Description 2</p>
-                <p>₱ 50.00</p>
-                <button onclick="addToCart()">Add to cart</button>
-            </div>
+    header {
+      width: 100%;
+      background-color: royalblue;
+      padding: 15px 0;
+      position: fixed;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 5px gray;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 5px 15px;
+      border-radius: 5px;
+      background-color: navy;
+      transition: background-color 0.3s;
+    }
+
+    nav a:hover {
+      background-color: mediumblue;
+    }
+
+    h1 {
+      color: darkslategray;
+      margin-top: 75px;
+    }
+
+    .category {
+      margin-top: 25px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .category h2 {
+      font-size: 1.8rem;
+      color: royalblue;
+      margin-bottom: 10px;
+    }
+
+    #shopList {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+      width: 100%;
+    }
+
+    .shopItem {
+      border: 2px solid lightgray;
+      border-radius: 10px;
+      padding: 20px;
+      width: 200px;
+      background-color: white;
+      box-shadow: 0 4px 10px silver;
+      text-align: center;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+    .shopItem:hover {
+      transform: translateY(-5px);
+      background-color: lightyellow;
+    }
+
+    .shopItem h3 {
+      font-size: 1.1rem;
+      margin: 10px 0;
+      color: darkslategray;
+    }
+
+    .shopItem p {
+      font-size: 1rem;
+      color: dimgray;
+    }
+
+    .shopItem button {
+      background-color: royalblue;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .shopItem button:hover {
+      background-color: mediumblue;
+    }
+	
+	.shopItem img {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  border: 1px solid #eee;
+}
+
+    #cartAndForm {
+      display: flex;
+      gap: 20px;
+      padding: 20px;
+      width: 100%;
+      max-width: 1100px;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    #cart {
+      border: 1px solid gray;
+      border-radius: 10px;
+      padding: 20px;
+      background-color: white;
+      width: 300px;
+      margin-top: 20px;
+      box-shadow: 0 4px 10px silver;
+    }
+
+    #cart h2 {
+      margin-top: 0;
+      color: darkslategray;
+    }
+
+    .cartItem {
+      border-bottom: 1px solid lightgray;
+      padding: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .cartItem button {
+      color: red;
+      cursor: pointer;
+      font-size: 1rem;
+      background: none;
+      border: none;
+      text-decoration: underline;
+    }
+
+    .cartItem button:hover {
+      text-decoration: none;
+    }
+
+    #total {
+      margin-top: 10px;
+      font-weight: bold;
+      font-size: 1.2rem;
+      color: darkgreen;
+    }
+
+    form {
+      border: 1px solid gray;
+      margin-top: 20px;
+      padding: 50px;
+      background-color: white;
+      border-radius: 10px;
+      width: 400px;
+      box-shadow: 0 4px 10px silver;
+    }
+
+    form label {
+      display: block;
+      margin-bottom: 5px;
+      color: darkslategray;
+    }
+
+    form input[type="text"] {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid gray;
+      border-radius: 5px;
+    }
+
+    form input[type="submit"] {
+      background-color: seagreen;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    form input[type="submit"]:hover {
+      background-color: mediumseagreen;
+    }
+
+    #aboutPage {
+      display: none;
+      padding: 20px;
+      max-width: 800px;
+      margin: 80px auto 20px;
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px silver;
+    }
+
+    #aboutPage h1 {
+      color: royalblue;
+      text-align: center;
+    }
+	
+	#aboutPage h2 {
+      color: royalblue;
+    }
+
+    .team-member {
+      margin: 20px 0;
+      padding: 15px;
+      border-bottom: 1px solid lightgray;
+    }
+
+    .team-member h3 {
+      color: black;
+    }
+
+    .team-member p {
+      color: black;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="#" onclick="showShopPage()">Shop</a>
+      <a href="#" onclick="showAboutPage()">About Us</a>
+    </nav>
+  </header>
+
+  <div id="shopPage">
+    <h1>Welcome to Our Online Shop</h1>
+
+    <div class="category">
+      <h2>Hironos</h2>
+      <div id="shopList">
+        <div class="shopItem">
+		<img src="https://prod-eurasian-res.popmart.com/default/20250114_173739_232427____1_____1200x1200.jpg" alt="Hirono The Little Prince Figurine">
+          <h3>Hirono The Little Prince Figurine</h3>
+          <p>Price: ₱6,000.00</p>
+          <button onclick="addToCart('Hirono The Little Prince Figurine', 6000)">Add to Cart</button>
         </div>
-        <div id="cart">
-            <h1>Cart</h1>
-            <div id="cartItems">
-            </div>
+        <div class="shopItem">
+		<img src="https://prod-eurasian-res.popmart.com/default/20250409_151333_870673____list_pic_____800x800.png?x-oss-process=image/resize,p_40,format,webp,format,webp" alt="Hirono Echo Series - Mini Bag Blind Box">
+          <h3>Hirono Echo Series - Mini Bag Blind Box</h3>
+          <p>Price: ₱700.00</p>
+          <button onclick="addToCart('Hirono Echo Series - Mini Bag Blind Box', 700)">Add to Cart</button>
         </div>
-        <form action="http://47.129.9.35/cs3/checkout.php" method="get">
-            <label for="name">Name</label>
-            <input type="text" name="cust_name" id="name" required>
-            <label for="address">Delivery Address</label>
-            <input type="text" name="cust_addr" id="address" required>
-            <label for="email">Email</label>
-            <input type="text" name="cust_email" id="email" required>
-            <input hidden name="cust_order">
-            <input type="submit">
-        </form>
-    </body>
+        <div class="shopItem">
+		<img src="https://prod-eurasian-res.popmart.com/default/20241023_115711_930388____1_____1200x1200.jpg" alt="Hirono Doll Panda Figure">
+          <h3>Hirono Doll Panda Figure</h3>
+          <p>Price: ₱1,700.00</p>
+          <button onclick="addToCart('Hirono Doll Panda Figure', 1700)">Add to Cart</button>
+        </div>
+        <div class="shopItem">
+		<img src="https://prod-eurasian-res.popmart.com/default/20240717_142752_671402____1_____1200x1200.jpg" alt="Hirono x Keith Haring Figure">
+          <h3>Hirono x Keith Haring Figure</h3>
+          <p>Price: ₱1,700.00</p>
+          <button onclick="addToCart('Hirono x Keith Haring Figure', 1700)">Add to Cart</button>
+        </div>
+        <div class="shopItem">
+		<img src="https://prod-eurasian-res.popmart.com/default/20240715_143423_251736____8_____1200x1200.jpg?x-oss-process=image/format,webp" alt="Hirono Shelter Series Figures">
+          <h3>Hirono Shelter Series Figures</h3>
+          <p>Price: ₱600.00</p>
+          <button onclick="addToCart('Hirono Shelter Series Figures', 600)">Add to Cart</button>
+        </div>
+      </div>
+
+      <h2>Video Games</h2>
+      <div id="shopList">
+        <div class="shopItem">
+		<img src="https://ecommerce.datablitz.com.ph/cdn/shop/files/sdvdsvsd_700x.jpg?v=1713169382" alt="Animal Crossing: New Horizons (MDE)">
+          <h3>Animal Crossing: New Horizons (MDE)</h3>
+          <p>Price: ₱2,250.00</p>
+          <button onclick="addToCart('Nintendo Switch Animal Crossing: New Horizons', 2250)">Add to Cart</button>
+        </div>
+        <div class="shopItem">
+		<img src="https://ecommerce.datablitz.com.ph/cdn/shop/files/mghhmgcn_700x.jpg?v=1713172328" alt="Nintendo Switch Super Smash Bros. Ultimate">
+          <h3>Nintendo Switch Super Smash Bros. Ultimate</h3>
+          <p>Price: ₱2,495.00</p>
+          <button onclick="addToCart('Nintendo Switch Super Smash Bros. Ultimate', 2495)">Add to Cart</button>
+        </div>
+        <div class="shopItem">
+		<img src="https://ecommerce.datablitz.com.ph/cdn/shop/products/pokemon-legend_6f28c8e6-3cd6-4cbf-95ff-d2bad794bbf5_700x.jpg?v=1676859640" alt="Pokemon Legends Arceus">
+          <h3>Pokemon Legends Arceus</h3>
+          <p>Price: ₱2,495.00</p>
+          <button onclick="addToCart('Pokemon Legends Arceus', 2495)">Add to Cart</button>
+        </div>
+        <div class="shopItem">
+		<img src="https://ecommerce.datablitz.com.ph/cdn/shop/products/stardew-valley-649589.8_95dfce4c-f38d-48a2-97fc-4a8bec40b2b6_700x.jpg?v=1676864714" alt="Nintendo Switch Stardew Valley">
+          <h3>Nintendo Switch Stardew Valley</h3>
+          <p>Price: ₱1,495.00</p>
+          <button onclick="addToCart('Nintendo Switch Stardew Valley', 1495)">Add to Cart</button>
+        </div>
+        <div class="shopItem">
+		<img src="https://ecommerce.datablitz.com.ph/cdn/shop/files/1_bdb4eb14-f6ef-4fe7-b59a-b4365518fc92_700x.jpg?v=1728952921" alt="Nintendo Switch Super Mario Party Jamboree">
+          <h3>Nintendo Switch Super Mario Party Jamboree</h3>
+          <p>Price: ₱2,395.00</p>
+          <button onclick="addToCart('Nintendo Switch Super Mario Party Jamboree', 2395)">Add to Cart</button>
+        </div>
+      </div>
+
+      <h2>Squishmallows</h2>
+      <div id="shopList">
+        <div class="shopItem">
+		<img src="https://www.toykingdom.com.ph/cdn/shop/files/TK39125383SQSN00484B_RMB_2_400x.png?v=1732087894https://www.toykingdom.com.ph/cdn/shop/files/TK39125383SQSN00484B_RMB_2_400x.png?v=1732087894" alt="Squishmallows Hello Kitty And Friends Pompompurin">
+          <h3>Squishmallows Hello Kitty And Friends Pompompurin</h3>
+          <p>Price: ₱699.00</p>
+          <button onclick="addToCart('Squishmallows Hello Kitty And Friends Pompompurin', 699)">Add to Cart</button>
+        </div>
+        <div class="shopItem">
+		<img src="https://www.toykingdom.com.ph/cdn/shop/files/TK39125384SQSN00486B_RMB_1_700x.png?v=1732087734" alt="Squishmallows Hello Kitty And Friends Badtz Maru">
+          <h3>Squishmallows Hello Kitty And Friends Badtz Maru</h3>
+          <p>Price: ₱699.00</p>
+          <button onclick="addToCart('Squishmallows Hello Kitty And Friends Badtz Maru', 699)">Add to Cart</button>
+        </div>
+        <div class="shopItem">
+		<img src="https://www.toykingdom.com.ph/cdn/shop/files/TK39129298SQSN00681_RMB_2_500x.jpg?v=1741584957" alt="Squishmallows Hello Kitty And Friends My Melody">
+          <h3>Squishmallows Hello Kitty And Friends My Melody</h3>
+          <p>Price: ₱699.00</p>
+          <button onclick="addToCart('Squishmallows Hello Kitty And Friends My Melody', 699)">Add to Cart</button>
+        </div>
+        <div class="shopItem">
+		<img src="https://www.toykingdom.com.ph/cdn/shop/files/TK39125382SQSN00483B_RMB_1_700x.png?v=1732087949" alt="Squishmallows Hello Kitty And Friends Kuromi">
+          <h3>Squishmallows Hello Kitty And Friends Kuromi</h3>
+          <p>Price: ₱699.00</p>
+          <button onclick="addToCart('Squishmallows Hello Kitty And Friends Kuromi', 699)">Add to Cart</button>
+        </div>
+        <div class="shopItem">
+		<img src="https://www.toykingdom.com.ph/cdn/shop/files/TK39129295SQSN00672_RMB_2_500x.jpg?v=1738812300" alt="Squishmallows Hello Kitty And Friends Hello Kitty">
+          <h3>Squishmallows Hello Kitty And Friends Hello Kitty</h3>
+          <p>Price: ₱699.00</p>
+          <button onclick="addToCart('Squishmallows Hello Kitty And Friends Hello Kitty', 699)">Add to Cart</button>
+        </div>
+      </div>
+
+      <h2>SKULLPANDA</h2>
+      <div id="shopList">
+        <div class="shopItem">
+		<img src="https://prod-eurasian-res.popmart.com/default/20250114_173739_232427____1_____1200x1200.jpg" alt="SKULLPANDA The Sound Series Figures">
+          <h3>SKULLPANDA The Sound Series Figures</h3>
+          <p>Price: ₱600.00</p>
+          <button onclick="addToCart('SKULLPANDA The Sound Series Figures', 600)">Add to Cart</button>
+        </div>
+        <div class="shopItem">
+		<img src="https://prod-eurasian-res.popmart.com/default/20250114_173739_232427____1_____1200x1200.jpg" alt="SKULLPANDA The Warmth Series">
+          <h3>SKULLPANDA The Warmth Series</h3>
+          <p>Price: ₱600.00</p>
+          <button onclick="addToCart('SKULLPANDA The Warmth Series', 600)">Add to Cart</button>
+        </div>
+        <div class="shopItem">
+		<img src="https://prod-eurasian-res.popmart.com/default/20250114_173739_232427____1_____1200x1200.jpg" alt="SKULLPANDA Everyday Wonderland Series">
+          <h3>SKULLPANDA Everyday Wonderland Series</h3>
+          <p>Price: ₱600.00</p>
+          <button onclick="addToCart('SKULLPANDA Everyday Wonderland Series', 600)">Add to Cart</button>
+        </div>
+        <div class="shopItem">
+		<img src="https://prod-eurasian-res.popmart.com/default/20250114_173739_232427____1_____1200x1200.jpg" alt="Skullpanda The Mare of Animals Series">
+          <h3>Skullpanda The Mare of Animals Series</h3>
+          <p>Price: ₱600.00</p>
+          <button onclick="addToCart('Skullpanda The Mare of Animals Series', 600)">Add to Cart</button>
+        </div>
+        <div class="shopItem">
+		<img src="https://prod-eurasian-res.popmart.com/default/20250114_173739_232427____1_____1200x1200.jpg" alt="Skullpanda City of Night Series">
+          <h3>Skullpanda City of Night Series</h3>
+          <p>Price: ₱600.00</p>
+          <button onclick="addToCart('Skullpanda City of Night Series', 600)">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="cartAndForm">
+      <div id="cart">
+        <h2>Cart</h2>
+        <div id="cartItems"></div>
+        <p id="total">Total: ₱0.00</p>
+      </div>
+
+      <form id="checkoutForm" action="http://47.129.9.35/cs3/checkout.php" method="POST">
+        <label for="name">Full Name:</label>
+        <input type="text" name="cust_name" id="name" required/>
+
+        <label for="address">Delivery Address:</label>
+        <input type="text" name="cust_addr" id="address" required/>
+
+        <label for="email">Email:</label>
+        <input type="text" name="cust_email" id="email" required/>
+
+        <input type="hidden" name="cust_order" id="cust_order"/>
+        <input type="submit" value="Proceed to Checkout" />
+      </form>
+    </div>
+  </div>
+
+  <div id="aboutPage">
+    <h1>About Us</h1>
+	<div class="team-member">
+	</div>
+	<h2>Meet Our Team:</h2>
+    <div class="team-member">
+      <h3><u>Ezio Rafael M. Gomez</u></h3>
+	  <ul>
+      <li><p><b>Contributions:</b> Inspiration for shop, Coding, and Designing</p></li>
+	  </ul>
+    </div>
+    <div class="team-member">
+      <h3><u>Sean Caleb S. Sanguyu</u></h3>
+       <ul>
+      <li><p><b>Contributions:</b> Coding and Designing</p></li>
+	  </ul>
+    </div>
+    <div class="team-member">
+      <h3><u>Princess Yzobelle I. Magrata</u></h3>
+       <ul>
+      <li><p><b>Contributions:</b> Coding and Designing</p></li>
+	  </ul>
+    </div>
+	<h2>References:</h2>
+	<div class="team-member">
+       <ul>
+      <li><p>POP MART Official(Philippines). (n.d.). POP MART. https://www.popmart.com/ph</p></li>
+	  <li><p>DataBlitz. (n.d.). DataBlitz - your total gaming and multimedia store. 
+	  https://ecommerce.datablitz.com.ph/</p></li>
+	  <li><p>Toy Kingdom. (n.d.). Squishmallows. https://www.toykingdom.com.ph/collections/squishmallows?srsltid=AfmBOooCsVlGnPIN0fJpX6uI5Ma5Avvfk5z942EuO3aO9X8ZwAF7t4su</p></li>
+	  </ul>
+    </div>
+  </div>
+
+  <script>
+   let cart = [];
+    let total = 0;
+
+
+    function addToCart(name, price) {
+      cart.push({ prod_name: name, prod_price: price });
+      total += price;
+      displayCart();
+    }
+
+
+    function displayCart() {
+      const cartItemsDiv = document.getElementById("cartItems");
+      cartItemsDiv.innerHTML = "";
+
+
+      cart.forEach((item, index) => {
+        const cartItemDiv = document.createElement("div");
+        cartItemDiv.className = "cartItem";
+        cartItemDiv.innerHTML = `${item.prod_name} - ₱${item.prod_price} <button onclick="removeFromCart(${index})">Remove</button>`;
+        cartItemsDiv.appendChild(cartItemDiv);
+      });
+
+
+      document.getElementById("total").innerText = `Total: ₱${total.toFixed(2)}`;
+      document.getElementById("cust_order").value = JSON.stringify(cart);
+    }
+
+
+    function removeFromCart(index) {
+      total -= cart[index].prod_price;
+      cart.splice(index, 1);
+      displayCart();
+    }
+
+
+    function showShopPage() {
+      document.getElementById("shopPage").style.display = "block";
+      document.getElementById("aboutPage").style.display = "none";
+    }
+
+    function showAboutPage() {
+      document.getElementById("shopPage").style.display = "none";
+      document.getElementById("aboutPage").style.display = "block";
+    }
+  </script>
+</body>
 </html>
+
+
